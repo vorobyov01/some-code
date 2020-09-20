@@ -1,29 +1,16 @@
 import numpy as np
+import json
 
 
 class Generator(object):
     def __init__(self):
-        self.ind_words = []
+        self.js = open("dict.txt").read()
+        self.word_dict = json.loads(self.js)
+        self.ind_words = list(self.word_dict.keys())
         self.pair = ()
-        self.word_dict = {}
         self.first_word = ""
         self.chain = []
         self.n_words = 20
-
-    def make_pairs(self, ind_words):
-        for i in range(len(ind_words) - 1):
-            yield (ind_words[i], ind_words[i + 1])
-
-    def fit(self, data):
-        data = data.replace('\n', ' ')
-        self.ind_words = data.split(' ')
-        self.pair = self.make_pairs(self.ind_words)
-
-        for word_1, word_2 in self.pair:
-            if word_1 in self.word_dict.keys():
-                self.word_dict[word_1].append(word_2)
-            else:
-                self.word_dict[word_1] = [word_2]
 
     def generate(self, n_words=20):
         self.first_word = np.random.choice(self.ind_words)
@@ -42,9 +29,5 @@ class Generator(object):
         return ' '.join(self.chain)
 
 
-data = open('/Users/sergei/PycharmProjects/Tcode/input.txt', encoding='utf8').read()
-
 model = Generator()
-model.fit(data)
-
-print(model.generate(100))
+print(model.generate(200))
